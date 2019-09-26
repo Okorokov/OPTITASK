@@ -6,7 +6,7 @@ public interface IMainContract {
 
         }
         interface Presenter {
-
+            boolean onAuthResult(String uid);
         }
 
         interface Repository {
