@@ -108,9 +108,9 @@ public class AuthShort extends AppCompatActivity implements View.OnClickListener
             }
         }
 
+        defaultRatingBar.setRating(rating);
 
         if (rating == Common.RATING_MAX - 1) {
-
             if (sPref.getBoolean(Common.SHARED_CODE, false)) {
 
                 String password_true = sPref.getString(Common.SHARED_CODE_STRING, "");
