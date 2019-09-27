@@ -11,10 +11,16 @@ import android.widget.TextView;
 
 import com.example.optitask.Common.Common;
 import com.example.optitask.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +40,8 @@ public class Auth  extends PDialog implements
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
     private TextView mDetailTextView;
+    private SignInButton signInButton;
+    private AdView mAdView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +52,10 @@ public class Auth  extends PDialog implements
         mDetailTextView = findViewById(R.id.detail);
 
         // Button listeners
-        findViewById(R.id.signInButton).setOnClickListener(this);
+        signInButton=(SignInButton)findViewById(R.id.signInButton);
+        signInButton.setOnClickListener(this);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setColorScheme(SignInButton.COLOR_DARK);
         findViewById(R.id.signOutButton).setOnClickListener(this);
         findViewById(R.id.disconnectButton).setOnClickListener(this);
 
@@ -56,6 +67,19 @@ public class Auth  extends PDialog implements
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
+
+
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -157,7 +181,7 @@ public class Auth  extends PDialog implements
             mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
             findViewById(R.id.signInButton).setVisibility(View.GONE);
-            findViewById(R.id.signOutAndDisconnect).setVisibility(View.VISIBLE);
+            //findViewById(R.id.signOutAndDisconnect).setVisibility(View.VISIBLE);
 
             Intent intent =new Intent();
 
@@ -173,7 +197,7 @@ public class Auth  extends PDialog implements
             mDetailTextView.setText(null);
 
             findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
-            findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
+            //findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
         }
     }
 
